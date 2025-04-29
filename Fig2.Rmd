@@ -4,13 +4,13 @@ output: github_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
 
-## Figure 2, panel a to e
+## Fig. 2, statistics and panel figures a to e ##
+Comparison between neurodevelopmental and psychiatric disorders (NPDs) associated rare genetic liability (CNVs) and diagnosis on A) mean cortical thickness (CT) effect sizes; B) total surface area (SA) effect sizes; C) the ratio of CT and SA effect sizes; and D) paired CT and SA effect sizes. E) Effects on CT and SA of common variants associated with NPDs. We tested if NPD genome-wide significant SNPs were enriched in SNPs associated with SA or CT. We ranked independent NPD-associated SNPs based on their p-value association with CT and SA.
 
-
-## Stats for Figure 2, panel a to d
+## Stats for Fig. 2, panel a to d
 
 ```{r stats_fig2}
 library(ggplot2)
@@ -28,7 +28,7 @@ in_df_plot[,"abs_es_MeanCT"] = abs(in_df_plot[,"es_MeanCT"])
 in_df_plot[,"abs_es_TotalSA"] = abs(in_df_plot[,"es_TotalSA"])
 
 
-### Stats Figure 2A, and 2B
+### Stats Fig. 2A, and 2B
 # fold change and Wilcox ranksum test
 test_metric = "abs_es_MeanCT"
 fold_change_meanCT = median(in_df_plot[in_df_plot[,"Type"] == "CNV",test_metric])/median(in_df_plot[in_df_plot[,"Type"] == "NPD",test_metric])
@@ -50,7 +50,7 @@ df_fold_change_fig2A_2B = data.frame(metric = c("meanCT","totalSA"),
 print(df_fold_change_fig2A_2B)
 
 
-## Stats: Figure 2 C 
+## Stats: Fig. 2 C 
 test_metric = "ratio_CT_SA"
 # Differences in ratios between CNVs and NPDs
 w1 = wilcox.test(in_df_plot[in_df_plot[,"Type"] == "CNV",test_metric],in_df_plot[in_df_plot[,"Type"] == "NPD",test_metric])
@@ -77,7 +77,7 @@ df_median_es_ratio_fig2C = data.frame(type = c("CNV","NPD"),
 print(df_median_es_ratio_fig2C)
 
 
-## Stats: Figure 2 D
+## Stats: Fig. 2 D
 
 w1 = wilcox.test(in_df_plot[in_df_plot[,"Type"] == "CNV","abs_es_MeanCT"],in_df_plot[in_df_plot[,"Type"] == "CNV","abs_es_TotalSA"],paired = TRUE)
 
@@ -95,9 +95,9 @@ print(df_paired_CT_and_SA_comparison_fig2D)
 
 ```
 
-## Plot Figure 2 A: meanCT
+## Plot Fig. 2 A: meanCT
 
-```{r fig_2a, echo=FALSE}
+```{r fig_2a, echo=TRUE}
 
 col_values_CNV_NPD = c("CNV" = "#e7298a","NPD" = "#1b9e77")
 input_base_font_size = 16
@@ -117,16 +117,17 @@ p_boxplot_CT = ggplot(in_df_plot, aes(x = Type, y = abs_es_MeanCT,color=Type)) +
   theme(axis.line.x = element_blank())+
   scale_y_continuous(trans = "log10",limits = c(0.00295,2.65),position = "left",breaks = c(seq(0.003,0.009,0.001),seq(0.01,0.09,0.01),seq(0.1,0.9,0.1),1,2),labels = c(rep("",7),0.01,rep("",8),0.1,rep("",8),1,""))+   
   theme(plot.margin = margin(0,0,0,0, "cm"))+
-  theme(legend.position = "none")
+  theme(legend.position = "none")+
+  ggtitle("2A: Effect sizes cortical thickness (CT)")
 
 print(p_boxplot_CT)
 
 
 ```
 
-## Plot Figure 2 B: totalSA
+## Plot Fig. 2 B: totalSA
 
-```{r fig2b, echo=FALSE}
+```{r fig2b, echo=TRUE}
 
 p_boxplot_SA = ggplot(in_df_plot, aes(x = Type, y = abs_es_TotalSA,color=Type)) +
   theme_prism(base_size = input_base_font_size,base_line_size = 0.75)+ 
@@ -141,16 +142,17 @@ p_boxplot_SA = ggplot(in_df_plot, aes(x = Type, y = abs_es_TotalSA,color=Type)) 
   theme(axis.line.x = element_blank())+
   scale_y_continuous(trans = "log10",limits = c(0.00295,2.65),position = "left",breaks = c(seq(0.003,0.009,0.001),seq(0.01,0.09,0.01),seq(0.1,0.9,0.1),1,2),labels = c(rep("",7),0.01,rep("",8),0.1,rep("",8),1,""))+   
   theme(plot.margin = margin(0,0,0,0, "cm"))+
-  theme(legend.position = "none")
+  theme(legend.position = "none") +
+  ggtitle("2B: Effect sizes surface area (SA)")
 
 print(p_boxplot_SA)
 
 
 ```
 
-## Plot Figure 2 C: Effect size ratio
+## Plot Fig. 2 C: Effect size ratio
 
-```{r fig2c, echo=FALSE}
+```{r fig2c, echo=TRUE}
 
 p_boxplot_es_ratio = ggplot(in_df_plot, aes(x = Type, y = ratio_CT_SA,color=Type)) +
   theme_prism(base_size = input_base_font_size,base_line_size = 0.75)+ 
@@ -165,16 +167,17 @@ p_boxplot_es_ratio = ggplot(in_df_plot, aes(x = Type, y = ratio_CT_SA,color=Type
   theme(axis.line.x = element_blank())+
   scale_y_continuous(trans = "log10",position = "left",limits = c(0.045,12),breaks = c(seq(0.05,0.09,0.01),seq(0.1,0.9,0.1),seq(1,9,1),10),labels = c(0.05,rep("",4),0.1,rep("",8),1,rep("",8),10))+  
   theme(plot.margin = margin(0,0,0,0, "cm"))+
-  theme(legend.position = "none") 
+  theme(legend.position = "none") +
+  ggtitle("2C: Effect size ratio")
   
 print(p_boxplot_es_ratio)
 
 
 ```
 
-## Plot Figure 2 D: Paired boxplots for meanCT and totalSA comparison
+## Plot Fig. 2 D: Paired boxplots for meanCT and totalSA comparison
 
-```{r fig2d, echo=FALSE}
+```{r fig2d, echo=TRUE}
 
 
 library(ggpubr)
@@ -208,22 +211,26 @@ in_df_plot_SA_CT_es = data.frame( Column = c(in_df_plot[,"Column"],in_df_plot[,"
 
 ## CNV
 in_df_ggpaired= in_df_plot_SA_CT_es[which(in_df_plot_SA_CT_es[,"Type"] == "CNV"),]
-p_paired_boxplot_CNV = ggpaired_boxplot(in_df_ggpaired)
+p_paired_boxplot_CNV = ggpaired_boxplot(in_df_ggpaired) +
+  ggtitle("2D: CNV paired effect size comparison")
+
 print("CNV paired boxplot between meanCT and totalSA effect sizes (abs)")
 print(p_paired_boxplot_CNV)
 
 ## NPD
 in_df_ggpaired= in_df_plot_SA_CT_es[which(in_df_plot_SA_CT_es[,"Type"] == "NPD"),]
-p_paired_boxplot_NPD = ggpaired_boxplot(in_df_ggpaired)
+p_paired_boxplot_NPD = ggpaired_boxplot(in_df_ggpaired) +
+  ggtitle("2D: NPD paired effect size comparison")
+
 print("NPD paired boxplot between meanCT and totalSA effect sizes (abs)")
 print(p_paired_boxplot_NPD)
 
 
 ```
 
-## Plot Figure 2 E: Ranking NPD-associated SNPs in meanCT 
+## Plot Fig. 2 E: Ranking NPD-associated SNPs in meanCT 
 
-```{r fig2e_meanCT, echo=FALSE}
+```{r fig2e_meanCT, echo=TRUE}
 
 # load simplified data (as full GWAS summary statistics are large)
 load("data_fig2e_NPD_SNPs_ranking_in_meanCT_totalSA_GWAS.RData")
@@ -308,7 +315,8 @@ for(loop_d in c(1:length(array_PGC_GWAS_disorder_names))){
 p_NPD_GWAS_signif_SNPs_ranking_in_meanCT = ggarrange(plotlist = list_plots_CT,nrow = 1,align = "v")
 
 
-p_NPD_GWAS_signif_SNPs_ranking_in_meanCT = p_NPD_GWAS_signif_SNPs_ranking_in_meanCT + ylab("CT %")
+p_NPD_GWAS_signif_SNPs_ranking_in_meanCT = p_NPD_GWAS_signif_SNPs_ranking_in_meanCT  +
+  ggtitle("2E: Ranking NPD SNPs in meanCT cortical GWAS") + ylab("CT %")
 
 ## Plot of ranking of PGC NPD GWAS significant SNPs in meanCT GWAS (Grasby 2020)
 print(p_NPD_GWAS_signif_SNPs_ranking_in_meanCT)
@@ -316,9 +324,9 @@ print(p_NPD_GWAS_signif_SNPs_ranking_in_meanCT)
 
 ```
 
-## Plot Figure 2 E: Ranking NPD-associated SNPs in totalSA 
+## Plot Fig. 2 E: Ranking NPD-associated SNPs in totalSA 
 
-```{r fig2e_totalSA, echo=FALSE}
+```{r fig2e_totalSA, echo=TRUE}
 
 input_metric = "totalSA"
 
@@ -346,7 +354,8 @@ for(loop_d in c(1:length(array_PGC_GWAS_disorder_names))){
 
 p_NPD_GWAS_signif_SNPs_ranking_in_totalSA = ggarrange(plotlist = list_plots_SA,nrow = 1)
 
-p_NPD_GWAS_signif_SNPs_ranking_in_totalSA = p_NPD_GWAS_signif_SNPs_ranking_in_totalSA + ylab("SA %")
+p_NPD_GWAS_signif_SNPs_ranking_in_totalSA = p_NPD_GWAS_signif_SNPs_ranking_in_totalSA  +
+  ggtitle("2E: Ranking NPD SNPs in totalSA cortical GWAS") + ylab("SA %")
 
 ## Plot of ranking of PGC NPD GWAS significant SNPs in totalSA GWAS (Grasby 2020)
 print(p_NPD_GWAS_signif_SNPs_ranking_in_totalSA)
@@ -355,4 +364,4 @@ print(p_NPD_GWAS_signif_SNPs_ranking_in_totalSA)
 ```
 
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+

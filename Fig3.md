@@ -1,23 +1,19 @@
 Fig3
 ================
 
-## Figure 3
+## Fig. 3: statistics and panel figures: a to d
 
-## Stats for Figure 3, panel a to c
+Comparing the effect sizes on mean cortical thickness (CT) and total
+surface area (SA) of neurodevelopmental and psychiatric disorders (NPDs)
+diagnostic sub-groups with and without medications using A-B) violin
+plots; C) the ratio of CT and SA effect sizes; and D) paired CT and SA
+effect sizes.
+
+## Stats for Fig. 3
 
 ``` r
 library(ggplot2)
-```
-
-    ## Warning: package 'ggplot2' was built under R version 4.2.3
-
-``` r
 library(ggprism)   # we use ggprism theme
-```
-
-    ## Warning: package 'ggprism' was built under R version 4.2.3
-
-``` r
 library(ggrepel)
 
 ## Load data
@@ -36,21 +32,12 @@ in_df_plot[,"abs_es_TotalSA"] = abs(in_df_plot[,"es_TotalSA"])
 test_metric = "abs_es_MeanCT"
 fold_change_meanCT = median(in_df_plot[in_df_plot[,"Type"] == "NPD-med",test_metric])/median(in_df_plot[in_df_plot[,"Type"] == "NPD-umed",test_metric])
 w1 = wilcox.test(in_df_plot[in_df_plot[,"Type"] == "NPD-med",test_metric],in_df_plot[in_df_plot[,"Type"] == "NPD-umed",test_metric])
-```
 
-    ## Warning in wilcox.test.default(in_df_plot[in_df_plot[, "Type"] == "NPD-med", :
-    ## cannot compute exact p-value with ties
-
-``` r
 test_metric = "abs_es_TotalSA"
 fold_change_totalSA = median(in_df_plot[in_df_plot[,"Type"] == "NPD-med",test_metric])/median(in_df_plot[in_df_plot[,"Type"] == "NPD-umed",test_metric])
 w2 = wilcox.test(in_df_plot[in_df_plot[,"Type"] == "NPD-med",test_metric],in_df_plot[in_df_plot[,"Type"] == "NPD-umed",test_metric])
-```
 
-    ## Warning in wilcox.test.default(in_df_plot[in_df_plot[, "Type"] == "NPD-med", :
-    ## cannot compute exact p-value with ties
 
-``` r
 p_array = c(w1$p.value,w2$p.value)
 p_array_adj = p.adjust(p_array,method = "fdr")
 
@@ -67,16 +54,11 @@ print(df_fold_change_fig3A_3B)
     ## 2 totalSA           1 0.734633249 0.7346332
 
 ``` r
-## (OPTIONAL) Stats:  Effect size ratio 
+##  Stats:  Effect size ratio 
 test_metric = "ratio_CT_SA"
 # Differences in ratios between CNVs and NPDs
 w1 = wilcox.test(in_df_plot[in_df_plot[,"Type"] == "NPD-med",test_metric],in_df_plot[in_df_plot[,"Type"] == "NPD-umed",test_metric])
-```
 
-    ## Warning in wilcox.test.default(in_df_plot[in_df_plot[, "Type"] == "NPD-med", :
-    ## cannot compute exact p-value with ties
-
-``` r
 pvalue_ratio_NPDmed_vs_NPDumed = w1$p.value
 print(paste0("Fig 3: Stats comparing the distribution of effect size ratios between NPD-med and NPD-umed, Wilcox ranksum p-value=",pvalue_ratio_NPDmed_vs_NPDumed))
 ```
@@ -87,15 +69,7 @@ print(paste0("Fig 3: Stats comparing the distribution of effect size ratios betw
 # Shift from a ratio of 1
 w1 <- wilcox.test(in_df_plot[in_df_plot[,"Type"] == "NPD-med",test_metric],mu = 1,alternative = "greater")
 w2 <- wilcox.test(in_df_plot[in_df_plot[,"Type"] == "NPD-umed",test_metric],mu = 1,alternative = "greater")
-```
 
-    ## Warning in wilcox.test.default(in_df_plot[in_df_plot[, "Type"] == "NPD-umed", :
-    ## cannot compute exact p-value with ties
-
-    ## Warning in wilcox.test.default(in_df_plot[in_df_plot[, "Type"] == "NPD-umed", :
-    ## cannot compute exact p-value with zeroes
-
-``` r
 median_ratio_NPDmed = median(in_df_plot[in_df_plot[,"Type"] == "NPD-med",test_metric])
 median_ratio_NPDumed = median(in_df_plot[in_df_plot[,"Type"] == "NPD-umed",test_metric])
 
@@ -115,17 +89,12 @@ print(df_median_es_ratio_fig3x)
     ## 2 NPD-unmedicated     1.000000 0.6389754289 0.6389754289
 
 ``` r
-## Stats: Figure 3 C
+## Stats: Fig. 3 C
 
 w1 = wilcox.test(in_df_plot[in_df_plot[,"Type"] == "NPD-med","abs_es_MeanCT"],in_df_plot[in_df_plot[,"Type"] == "NPD-med","abs_es_TotalSA"],paired = TRUE)
 
 w2 = wilcox.test(in_df_plot[in_df_plot[,"Type"] == "NPD-umed","abs_es_MeanCT"],in_df_plot[in_df_plot[,"Type"] == "NPD-umed","abs_es_TotalSA"],paired = TRUE)
-```
 
-    ## Warning in wilcox.test.default(in_df_plot[in_df_plot[, "Type"] == "NPD-umed", :
-    ## cannot compute exact p-value with zeroes
-
-``` r
 p_array = c(w1$p.value,w2$p.value)
 p_array_adj = p.adjust(p_array,method = "fdr")
 
@@ -140,32 +109,156 @@ print(df_paired_CT_and_SA_comparison_fig3C)
     ## 1   NPD-medicated 0.006576538 0.01315308
     ## 2 NPD-unmedicated 0.477196620 0.47719662
 
-## Plot Figure 3 A: meanCT
+## Plot Fig. 3 A: meanCT
+
+``` r
+col_values_CNV_NPD = c("NPD-med" =  "#d95f02","NPD-umed" = "#7570b3")
+input_base_font_size = 16
+input_label_font_size = 5
+
+
+p_boxplot_CT = ggplot(in_df_plot, aes(x = Type, y = abs_es_MeanCT,color=Type)) +
+  theme_prism(base_size = input_base_font_size,base_line_size = 0.75)+ 
+  geom_violin(draw_quantiles = c(0.5),linetype = "dashed",trim = TRUE) +
+  scale_color_manual(values = col_values_CNV_NPD)+
+  geom_point(size = 3,position = position_jitter(width = 0.3))+
+  geom_text_repel(aes(label=Column),size=input_label_font_size,min.segment.length=0.3,max.overlaps=20)+
+  #geom_hline(yintercept = 0.1,linetype="dotted", color="black")+
+  annotate("text",x=0.6,y= 0.005, size=input_label_font_size,label = paste("-p: pediatric","\n","-y: young"),hjust = 0)+
+  xlab(NULL) + ylab("Effect size (abs)")+
+  theme(text = element_text(size=input_base_font_size), axis.text.x =element_text(size=input_base_font_size),axis.text.y =element_text(size=input_base_font_size))+
+  theme(axis.line.x = element_blank())+
+  scale_y_continuous(trans = "log10",limits = c(0.00295,2.65),position = "left",breaks = c(seq(0.003,0.009,0.001),seq(0.01,0.09,0.01),seq(0.1,0.9,0.1),1,2),labels = c(rep("",7),0.01,rep("",8),0.1,rep("",8),1,""))+   
+  theme(plot.margin = margin(0,0,0,0, "cm"))+
+  theme(legend.position = "none") +
+  ggtitle("3A: Effect sizes cortical thickness (CT)")
+
+print(p_boxplot_CT)
+```
 
 ![](Fig3_files/figure-gfm/fig_3a-1.png)<!-- -->
 
-## Plot Figure 3 B: totalSA
+## Plot Fig. 3 B: totalSA
+
+``` r
+p_boxplot_SA = ggplot(in_df_plot, aes(x = Type, y = abs_es_TotalSA,color=Type)) +
+  theme_prism(base_size = input_base_font_size,base_line_size = 0.75)+ 
+  geom_violin(draw_quantiles = c(0.5),linetype = "dashed",trim = TRUE) +
+  scale_color_manual(values = col_values_CNV_NPD)+
+  geom_point(size = 3,position = position_jitter(width = 0.3))+
+  geom_text_repel(aes(label=Column),size=input_label_font_size,min.segment.length=0.3,max.overlaps=20)+
+  #geom_hline(yintercept = 0.1,linetype="dotted", color="black")+
+  #annotate("text",x=0.6,y= 0.005, size=input_label_font_size,label = paste("-p: pediatric","\n","-y: young"),hjust = 0)+
+  xlab(NULL) + ylab("Effect size (abs)")+
+  theme(text = element_text(size=input_base_font_size), axis.text.x =element_text(size=input_base_font_size),axis.text.y =element_text(size=input_base_font_size))+
+  theme(axis.line.x = element_blank())+
+  scale_y_continuous(trans = "log10",limits = c(0.00295,2.65),position = "left",breaks = c(seq(0.003,0.009,0.001),seq(0.01,0.09,0.01),seq(0.1,0.9,0.1),1,2),labels = c(rep("",7),0.01,rep("",8),0.1,rep("",8),1,""))+   
+  theme(plot.margin = margin(0,0,0,0, "cm"))+
+  theme(legend.position = "none") +
+  ggtitle("3B: Effect sizes surface area (SA)")
+
+
+print(p_boxplot_SA)
+```
 
 ![](Fig3_files/figure-gfm/fig3b-1.png)<!-- -->
 
-## Plot Figure 3 x: Effect size ratio
+## Plot Fig. 3 C: Effect size ratio
 
-![](Fig3_files/figure-gfm/fig3x-1.png)<!-- -->
+``` r
+p_boxplot_es_ratio = ggplot(in_df_plot, aes(x = Type, y = ratio_CT_SA,color=Type)) +
+  theme_prism(base_size = input_base_font_size,base_line_size = 0.75)+ 
+  geom_violin(draw_quantiles = c(0.5),linetype = "dashed",trim = TRUE) +
+  scale_color_manual(values = col_values_CNV_NPD)+
+  geom_point(size = 3,position = position_jitter(width = 0.3))+
+  geom_text_repel(aes(label=Column),size=input_label_font_size,min.segment.length=0.3,max.overlaps=20)+
+  geom_hline(yintercept = 1,linetype="dotted", color="black",linewidth = 2)+
+  #annotate("text",x=0.6,y= 0.005, size=input_label_font_size,label = paste("-p: pediatric","\n","-y: young"),hjust = 0)+
+  xlab(NULL) + ylab("Cohen's d CT / Cohen's d SA ratio")+
+  theme(text = element_text(size=input_base_font_size), axis.text.x =element_text(size=input_base_font_size),axis.text.y =element_text(size=input_base_font_size))+
+  theme(axis.line.x = element_blank())+
+  scale_y_continuous(trans = "log10",position = "left",limits = c(0.045,41.5),breaks = c(seq(0.05,0.09,0.01),seq(0.1,0.9,0.1),seq(1,9,1),10,20,30,40),labels = c(0.05,rep("",4),0.1,rep("",8),1,rep("",8),10,rep("",3)))+  
+  theme(plot.margin = margin(0,0,0,0, "cm"))+
+  theme(legend.position = "none") +
+  ggtitle("3C: Effect size ratio")
 
-## Plot Figure 3 C: Paired boxplots for meanCT and totalSA comparison
-
-    ## Scale for colour is already present.
-    ## Adding another scale for colour, which will replace the existing scale.
-
-    ## [1] "NPD-medicated paired boxplot between meanCT and totalSA effect sizes (abs)"
+  
+print(p_boxplot_es_ratio)
+```
 
 ![](Fig3_files/figure-gfm/fig3c-1.png)<!-- -->
 
+## Plot Fig. 3 D: Paired boxplots for meanCT and totalSA comparison
+
+``` r
+library(ggpubr)
+library(ggsignif)
+
+col_values_metric = c("CT" = "#e41a1c", "SA" = "#377eb8")
+
+## function to make ggpaired plot
+ggpaired_boxplot = function(in_df_ggpaired){
+  
+  in_df_ggpaired[,"metric"] = factor(in_df_ggpaired[,"metric"],levels =c("CT","SA"))
+  
+  p_ggpaired = ggpaired(in_df_ggpaired, x = "metric", y = "ES",
+           color = "metric", shape="metric",line.color = "gray", line.size = 0.6,palette = "jco")+
+    theme_prism(base_size = 24,base_line_size = 0.5) +   
+    scale_color_manual(values = col_values_metric)+
+    theme(legend.position = "none")+
+    scale_y_continuous(trans = "log10",limits = c(0.002,3),breaks = c(seq(0.002,0.009,0.001),seq(0.01,0.09,0.01),seq(0.1,0.9,0.1),1,2,3),labels = c(rep("",8),0.01,rep("",8),0.1,rep("",8),1,"",""))+   
+    theme(axis.line.x = element_blank())+
+    xlab(NULL) + ylab("Effect size (abs)") +
+  ggtitle("3D: Paired effect size comparison")
+
+  
+  return(p_ggpaired)
+  
+}
+
+
+in_df_plot_SA_CT_es = data.frame( Column = c(in_df_plot[,"Column"],in_df_plot[,"Column"]),
+                                  Type = c(in_df_plot[,"Type"],in_df_plot[,"Type"]),
+                                  metric = c(rep("CT",nrow(in_df_plot)),rep("SA",nrow(in_df_plot))),
+                                  ES = c(abs(in_df_plot[,"es_MeanCT"]),abs(in_df_plot[,"es_TotalSA"])))
+
+## NPD-medicated
+in_df_ggpaired= in_df_plot_SA_CT_es[which(in_df_plot_SA_CT_es[,"Type"] == "NPD-med"),]
+p_paired_boxplot_NPDmed = ggpaired_boxplot(in_df_ggpaired)
+```
+
     ## Scale for colour is already present.
     ## Adding another scale for colour, which will replace the existing scale.
 
+``` r
+print("NPD-medicated paired boxplot between meanCT and totalSA effect sizes (abs)")
+```
+
+    ## [1] "NPD-medicated paired boxplot between meanCT and totalSA effect sizes (abs)"
+
+``` r
+print(p_paired_boxplot_NPDmed)
+```
+
+![](Fig3_files/figure-gfm/fig3d-1.png)<!-- -->
+
+``` r
+## NPD-unmedicated
+in_df_ggpaired= in_df_plot_SA_CT_es[which(in_df_plot_SA_CT_es[,"Type"] == "NPD-umed"),]
+p_paired_boxplot_NPDumed = ggpaired_boxplot(in_df_ggpaired)
+```
+
+    ## Scale for colour is already present.
+    ## Adding another scale for colour, which will replace the existing scale.
+
+``` r
+print("NPD-unmedicated paired boxplot between meanCT and totalSA effect sizes (abs)")
+```
+
     ## [1] "NPD-unmedicated paired boxplot between meanCT and totalSA effect sizes (abs)"
 
-![](Fig3_files/figure-gfm/fig3c-2.png)<!-- --> Note that the
-`echo = FALSE` parameter was added to the code chunk to prevent printing
-of the R code that generated the plot.
+``` r
+print(p_paired_boxplot_NPDumed)
+```
+
+![](Fig3_files/figure-gfm/fig3d-2.png)<!-- -->

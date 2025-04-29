@@ -4,13 +4,14 @@ output: github_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
 
-## Figure 3
+## Fig. 3: statistics and panel figures: a to d ##
+Comparing the effect sizes on mean cortical thickness (CT) and total surface area (SA) of neurodevelopmental and psychiatric disorders (NPDs) diagnostic sub-groups with and without medications using A-B) violin plots; C) the ratio of CT and SA effect sizes; and D) paired CT and SA effect sizes. 
 
 
-## Stats for Figure 3, panel a to c
+## Stats for Fig. 3
 
 ```{r stats_fig3}
 library(ggplot2)
@@ -50,7 +51,7 @@ df_fold_change_fig3A_3B = data.frame(metric = c("meanCT","totalSA"),
 print(df_fold_change_fig3A_3B)
 
 
-## (OPTIONAL) Stats:  Effect size ratio 
+##  Stats:  Effect size ratio 
 test_metric = "ratio_CT_SA"
 # Differences in ratios between CNVs and NPDs
 w1 = wilcox.test(in_df_plot[in_df_plot[,"Type"] == "NPD-med",test_metric],in_df_plot[in_df_plot[,"Type"] == "NPD-umed",test_metric])
@@ -77,7 +78,7 @@ df_median_es_ratio_fig3x = data.frame(type = c("NPD-medicated","NPD-unmedicated"
 print(df_median_es_ratio_fig3x)
 
 
-## Stats: Figure 3 C
+## Stats: Fig. 3 C
 
 w1 = wilcox.test(in_df_plot[in_df_plot[,"Type"] == "NPD-med","abs_es_MeanCT"],in_df_plot[in_df_plot[,"Type"] == "NPD-med","abs_es_TotalSA"],paired = TRUE)
 
@@ -95,9 +96,9 @@ print(df_paired_CT_and_SA_comparison_fig3C)
 
 ```
 
-## Plot Figure 3 A: meanCT
+## Plot Fig. 3 A: meanCT
 
-```{r fig_3a, echo=FALSE}
+```{r fig_3a, echo=TRUE}
 
 col_values_CNV_NPD = c("NPD-med" =  "#d95f02","NPD-umed" = "#7570b3")
 input_base_font_size = 16
@@ -117,16 +118,17 @@ p_boxplot_CT = ggplot(in_df_plot, aes(x = Type, y = abs_es_MeanCT,color=Type)) +
   theme(axis.line.x = element_blank())+
   scale_y_continuous(trans = "log10",limits = c(0.00295,2.65),position = "left",breaks = c(seq(0.003,0.009,0.001),seq(0.01,0.09,0.01),seq(0.1,0.9,0.1),1,2),labels = c(rep("",7),0.01,rep("",8),0.1,rep("",8),1,""))+   
   theme(plot.margin = margin(0,0,0,0, "cm"))+
-  theme(legend.position = "none")
+  theme(legend.position = "none") +
+  ggtitle("3A: Effect sizes cortical thickness (CT)")
 
 print(p_boxplot_CT)
 
 
 ```
 
-## Plot Figure 3 B: totalSA
+## Plot Fig. 3 B: totalSA
 
-```{r fig3b, echo=FALSE}
+```{r fig3b, echo=TRUE}
 
 p_boxplot_SA = ggplot(in_df_plot, aes(x = Type, y = abs_es_TotalSA,color=Type)) +
   theme_prism(base_size = input_base_font_size,base_line_size = 0.75)+ 
@@ -141,16 +143,18 @@ p_boxplot_SA = ggplot(in_df_plot, aes(x = Type, y = abs_es_TotalSA,color=Type)) 
   theme(axis.line.x = element_blank())+
   scale_y_continuous(trans = "log10",limits = c(0.00295,2.65),position = "left",breaks = c(seq(0.003,0.009,0.001),seq(0.01,0.09,0.01),seq(0.1,0.9,0.1),1,2),labels = c(rep("",7),0.01,rep("",8),0.1,rep("",8),1,""))+   
   theme(plot.margin = margin(0,0,0,0, "cm"))+
-  theme(legend.position = "none")
+  theme(legend.position = "none") +
+  ggtitle("3B: Effect sizes surface area (SA)")
+
 
 print(p_boxplot_SA)
 
 
 ```
 
-## Plot Figure 3 x: Effect size ratio
+## Plot Fig. 3 C: Effect size ratio
 
-```{r fig3x, echo=FALSE}
+```{r fig3c, echo=TRUE}
 
 p_boxplot_es_ratio = ggplot(in_df_plot, aes(x = Type, y = ratio_CT_SA,color=Type)) +
   theme_prism(base_size = input_base_font_size,base_line_size = 0.75)+ 
@@ -165,16 +169,18 @@ p_boxplot_es_ratio = ggplot(in_df_plot, aes(x = Type, y = ratio_CT_SA,color=Type
   theme(axis.line.x = element_blank())+
   scale_y_continuous(trans = "log10",position = "left",limits = c(0.045,41.5),breaks = c(seq(0.05,0.09,0.01),seq(0.1,0.9,0.1),seq(1,9,1),10,20,30,40),labels = c(0.05,rep("",4),0.1,rep("",8),1,rep("",8),10,rep("",3)))+  
   theme(plot.margin = margin(0,0,0,0, "cm"))+
-  theme(legend.position = "none") 
+  theme(legend.position = "none") +
+  ggtitle("3C: Effect size ratio")
+
   
 print(p_boxplot_es_ratio)
 
 
 ```
 
-## Plot Figure 3 C: Paired boxplots for meanCT and totalSA comparison
+## Plot Fig. 3 D: Paired boxplots for meanCT and totalSA comparison
 
-```{r fig3c, echo=FALSE}
+```{r fig3d, echo=TRUE}
 
 
 library(ggpubr)
@@ -194,7 +200,9 @@ ggpaired_boxplot = function(in_df_ggpaired){
     theme(legend.position = "none")+
     scale_y_continuous(trans = "log10",limits = c(0.002,3),breaks = c(seq(0.002,0.009,0.001),seq(0.01,0.09,0.01),seq(0.1,0.9,0.1),1,2,3),labels = c(rep("",8),0.01,rep("",8),0.1,rep("",8),1,"",""))+   
     theme(axis.line.x = element_blank())+
-    xlab(NULL) + ylab("Effect size (abs)")
+    xlab(NULL) + ylab("Effect size (abs)") +
+  ggtitle("3D: Paired effect size comparison")
+
   
   return(p_ggpaired)
   
@@ -220,4 +228,5 @@ print(p_paired_boxplot_NPDumed)
 
 
 ```
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+

@@ -1,0 +1,12 @@
+"condition","type","n_regions","nsig_fdr_CT","nsig_fdr_SA"
+"1q21.1 Del","CNV",34,20,10
+"1q21.1 Dup","CNV",34,6,9
+"16p11.2 Del","CNV",34,10,25
+"16p11.2 Dup","CNV",34,26,19
+"22q11.2 Del","CNV",34,13,21
+"22q11.2 Dup","CNV",34,14,13
+"16p13.11 Dup","CNV",34,3,6
+"15q11.2 Dup","CNV",34,14,4
+"15q11.2 Del","CNV",34,20,10
+"XYY","CNV",34,6,14
+"XXY","CNV",34,5,15

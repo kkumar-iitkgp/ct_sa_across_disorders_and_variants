@@ -1,0 +1,13 @@
+"condition","type","n_regions","nsig_fdr_CT","nsig_fdr_SA"
+"OCD","NPD-umed",34,0,0
+"ADHD","NPD-umed",34,0,0
+"ASD","NPD-umed",34,0,0
+"OCD-y","NPD-umed",34,0,0
+"ADHD-y","NPD-umed",34,0,0
+"ASD-y","NPD-umed",34,0,0
+"OCD-p","NPD-umed",34,0,0
+"ADHD-p","NPD-umed",34,0,0
+"ASD-p","NPD-umed",34,2,0
+"MDD","NPD-umed",34,0,0
+"MDD-y","NPD-umed",34,0,0
+"SCZ","NPD-umed",34,0,0

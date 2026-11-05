@@ -1,0 +1,6 @@
+"reference_map","reference_label","map","r","p_spin"
+"evoexp","Evolutionary expansion","CT_CNVs",0.492480395089193,0.00825
+"evoexp","Evolutionary expansion","SA_CNVs",0.257379831332498,0.1188
+"evoexp","Evolutionary expansion","CT_NPDs",-0.439552100559438,0.0164
+"evoexp","Evolutionary expansion","SA_NPDs",-0.0882722959910567,0.2536
+"evoexp","Evolutionary expansion","SA_SNPs",0.158746121285415,0.2666

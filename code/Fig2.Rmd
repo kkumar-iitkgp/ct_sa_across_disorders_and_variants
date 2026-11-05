@@ -1,0 +1,402 @@
+---
+title: "Fig2"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+## Fig. 2, statistics and panel figures A to F
+
+Figure 2. Global cortical differences across genetic variants and psychiatric diagnoses.
+
+A-C) Comparing cortical phenotypes between neurodevelopmental and psychiatric disorders (NPDs), and rare genetic variants (CNVs) associated with NPDs, for A) mean cortical thickness (CT) effect sizes; B) total surface area (SA) effect sizes; C) Ratio of Cohen’s d CT and Cohen’s d SA (effect sizes). D-F) Comparing sub-groups with and without medications across NPDs for D) mean cortical thickness (CT) effect sizes; E) total surface area (SA) effect sizes; F) Ratio of Cohen’s d CT and Cohen’s d SA. Case-control differences were adjusted for age, sex, and site. Effect sizes correspond to absolute Cohen’s d values. *: FDR significant (q<0.05), across all pairs of comparisons. For panel C and F, * and arrows denote the direction of the median ratio shift from 1 (FDR q<0.05). Y-axis: Absolute effect sizes, and effect size ratios, plotted on a log10 scale.
+
+## Load data
+
+```{r load_data}
+source("Rscript_utility_functions.R")
+library(cowplot)
+library(gridExtra)
+library(grid)
+
+load(paste0(data_dir, "data_fig2_fig3.RData"))
+
+## CNVs and adult NPDs, plus conduct disorder (CD)
+in_df_fig2 = data_fig2_fig3[which((data_fig2_fig3$Type %in% c("CNV", "NPD")) & (data_fig2_fig3$age_group %in% c("CNV", "Adult"))), ]
+in_df_fig2 = rbind(in_df_fig2, data_fig2_fig3[which(data_fig2_fig3$Column == "CD"), ])
+
+## Adult NPD sub-groups with and without medication
+in_df_fig3 = data_fig2_fig3[which((data_fig2_fig3$Type %in% c("NPD-med", "NPD-umed")) & (data_fig2_fig3$age_group == "Adult")), ]
+
+## Absolute effect sizes
+in_df_fig2$abs_es_MeanCT = abs(in_df_fig2$es_MeanCT)
+in_df_fig2$abs_es_TotalSA = abs(in_df_fig2$es_TotalSA)
+in_df_fig3$abs_es_MeanCT = abs(in_df_fig3$es_MeanCT)
+in_df_fig3$abs_es_TotalSA = abs(in_df_fig3$es_TotalSA)
+
+## Numeric IDs within each group, ordered by decreasing CT effect size
+in_df_fig2 = in_df_fig2[order(in_df_fig2$Type, -in_df_fig2$abs_es_MeanCT), ]
+in_df_fig2$ID = ave(in_df_fig2$abs_es_MeanCT, in_df_fig2$Type, FUN = seq_along)
+in_df_fig3 = in_df_fig3[order(in_df_fig3$Type, -in_df_fig3$abs_es_MeanCT), ]
+in_df_fig3$ID = ave(in_df_fig3$abs_es_MeanCT, in_df_fig3$Type, FUN = seq_along)
+
+print(table(in_df_fig2$Type))
+print(table(in_df_fig3$Type))
+```
+
+## Stats Fig. 2A and 2B
+
+```{r stats_fig2A_2B}
+## Fold change of median absolute effect sizes and Wilcoxon rank-sum test
+group_1 = in_df_fig2[in_df_fig2$Type == "CNV", ]
+group_2 = in_df_fig2[in_df_fig2$Type == "NPD", ]
+
+test_metric = "abs_es_MeanCT"
+fold_change_meanCT = median(group_1[, test_metric]) / median(group_2[, test_metric])
+w1 = wilcox.test(group_1[, test_metric], group_2[, test_metric], alternative = "greater")
+
+test_metric = "abs_es_TotalSA"
+fold_change_totalSA = median(group_1[, test_metric]) / median(group_2[, test_metric])
+w2 = wilcox.test(group_1[, test_metric], group_2[, test_metric], alternative = "greater")
+
+p_array = c(w1$p.value, w2$p.value)
+p_array_adj = p.adjust(p_array, method = "fdr")
+
+df_fold_change_fig2A_2B = data.frame(metric = c("meanCT", "totalSA"),
+                                     n_CNV = nrow(group_1),
+                                     n_NPD = nrow(group_2),
+                                     fold_change = c(fold_change_meanCT, fold_change_totalSA),
+                                     fold_change_rounded = round(c(fold_change_meanCT, fold_change_totalSA)),
+                                     pval = p_array,
+                                     pval_adj = p_array_adj)
+print(df_fold_change_fig2A_2B)
+```
+
+## Stats Fig. 2C
+
+```{r stats_fig2C}
+test_metric = "ratio_CT_SA"
+
+## Difference in effect size ratios between CNVs and NPDs
+w1 = wilcox.test(group_1[, test_metric], group_2[, test_metric], alternative = "less")
+pvalue_ratio_CNV_vs_NPD = w1$p.value
+print(pvalue_ratio_CNV_vs_NPD)
+
+## Shift of the median ratio from 1
+w1 = wilcox.test(group_1[, test_metric], mu = 1, alternative = "less")
+w2 = wilcox.test(group_2[, test_metric], mu = 1, alternative = "greater")
+
+p_array = c(w1$p.value, w2$p.value)
+p_array_adj = p.adjust(p_array, method = "fdr")
+
+df_median_es_ratio_fig2C = data.frame(type = c("CNV", "NPD"),
+                                      n = c(nrow(group_1), nrow(group_2)),
+                                      median_ratio = c(median(group_1[, test_metric]), median(group_2[, test_metric])),
+                                      pval = p_array,
+                                      pval_adj = p_array_adj)
+print(df_median_es_ratio_fig2C)
+```
+
+## Stats Fig. 2D and 2E
+
+```{r stats_fig2D_2E}
+group_1 = in_df_fig3[in_df_fig3$Type == "NPD-med", ]
+group_2 = in_df_fig3[in_df_fig3$Type == "NPD-umed", ]
+
+test_metric = "abs_es_MeanCT"
+fold_change_meanCT = median(group_1[, test_metric]) / median(group_2[, test_metric])
+w1 = wilcox.test(group_1[, test_metric], group_2[, test_metric], alternative = "greater")
+
+test_metric = "abs_es_TotalSA"
+fold_change_totalSA = median(group_1[, test_metric]) / median(group_2[, test_metric])
+w2 = wilcox.test(group_1[, test_metric], group_2[, test_metric], alternative = "greater")
+
+p_array = c(w1$p.value, w2$p.value)
+p_array_adj = p.adjust(p_array, method = "fdr")
+
+df_fold_change_fig2D_2E = data.frame(metric = c("meanCT", "totalSA"),
+                                     n_NPD_med = nrow(group_1),
+                                     n_NPD_umed = nrow(group_2),
+                                     fold_change = c(fold_change_meanCT, fold_change_totalSA),
+                                     fold_change_rounded = round(c(fold_change_meanCT, fold_change_totalSA)),
+                                     pval = p_array,
+                                     pval_adj = p_array_adj)
+print(df_fold_change_fig2D_2E)
+```
+
+## Stats Fig. 2F
+
+```{r stats_fig2F}
+test_metric = "ratio_CT_SA"
+
+## Difference in effect size ratios between medicated and unmedicated sub-groups
+w1 = wilcox.test(group_1[, test_metric], group_2[, test_metric])
+pvalue_ratio_NPDmed_vs_NPDumed = w1$p.value
+print(pvalue_ratio_NPDmed_vs_NPDumed)
+
+## Shift of the median ratio from 1
+w1 = wilcox.test(group_1[, test_metric], mu = 1, alternative = "greater")
+w2 = wilcox.test(group_2[, test_metric], mu = 1, alternative = "greater")
+
+p_array = c(w1$p.value, w2$p.value)
+p_array_adj = p.adjust(p_array, method = "fdr")
+
+df_median_es_ratio_fig2F = data.frame(type = c("NPD-med", "NPD-umed"),
+                                      n = c(nrow(group_1), nrow(group_2)),
+                                      median_ratio = c(median(group_1[, test_metric]), median(group_2[, test_metric])),
+                                      pval = p_array,
+                                      pval_adj = p_array_adj)
+print(df_median_es_ratio_fig2F)
+```
+
+## Plot settings
+
+```{r plot_settings}
+point_size = 3.5
+number_size = 2
+
+## Spread points horizontally so that numbered points do not overlap (log10 y-axis)
+spread_points = function(y_values, x_base, spread_width = 0.32, min_log_dist = 0.06) {
+  log_y = log10(y_values)
+  n = length(log_y)
+  set.seed(42)
+  x_pos = rep(x_base, n) + runif(n, -0.05, 0.05)
+  ord = order(log_y)
+  for (iter in 1:50) {
+    moved = FALSE
+    for (i in 1:(n - 1)) {
+      for (j in (i + 1):n) {
+        idx_i = ord[i]
+        idx_j = ord[j]
+        if (abs(log_y[idx_j] - log_y[idx_i]) < min_log_dist && abs(x_pos[idx_j] - x_pos[idx_i]) < 0.25) {
+          if (x_pos[idx_i] < x_pos[idx_j]) {
+            x_pos[idx_i] = x_pos[idx_i] - 0.12
+            x_pos[idx_j] = x_pos[idx_j] + 0.12
+          } else {
+            x_pos[idx_i] = x_pos[idx_i] + 0.12
+            x_pos[idx_j] = x_pos[idx_j] - 0.12
+          }
+          moved = TRUE
+        }
+      }
+    }
+    x_pos = pmax(x_base - spread_width, pmin(x_base + spread_width, x_pos))
+    if (!moved) break
+  }
+  return(x_pos)
+}
+
+## Violin plot with numbered points; bracket (star and fold change) between the two groups
+plot_panel = function(df, y_var, y_lab, colors, y_lim, y_breaks, y_labs, x_labels,
+                      panel_label, column_title, bracket_y, bracket_label = NULL) {
+
+  types = unique(df$Type)
+  df$x_spread = NA
+  for (i in seq_along(types)) {
+    idx = which(df$Type == types[i])
+    df$x_spread[idx] = spread_points(df[idx, y_var], x_base = i)
+  }
+
+  p = ggplot(df, aes(x = Type, y = .data[[y_var]], color = Type)) +
+    theme_prism(base_size = input_base_font_size, base_line_size = 0.5) +
+    geom_violin(draw_quantiles = 0.5, linetype = "dashed", trim = TRUE, alpha = 0.2, linewidth = 0.4) +
+    geom_point(aes(x = x_spread), size = point_size) +
+    geom_text(aes(x = x_spread, label = ID), size = number_size, color = "white", fontface = "bold") +
+    scale_color_manual(values = colors) +
+    scale_x_discrete(labels = x_labels) +
+    scale_y_continuous(trans = "log10", limits = y_lim, breaks = y_breaks, labels = y_labs, oob = scales::oob_keep) +
+    coord_cartesian(clip = "off") +
+    labs(x = NULL, y = y_lab, tag = panel_label) +
+    ggtitle(column_title) +
+    theme(legend.position = "none",
+          axis.line.x = element_blank(),
+          plot.tag = element_text(face = "bold", size = 12),
+          plot.tag.position = c(0.02, 0.98),
+          plot.title = element_text(hjust = 0.5, size = 10, face = "bold", margin = margin(b = 22)),
+          plot.margin = margin(10, 12, 5, 5))
+
+  if (!is.null(bracket_label)) {
+    p = p +
+      annotate("segment", x = 1, xend = 2, y = bracket_y, yend = bracket_y, linewidth = 0.9) +
+      annotate("segment", x = c(1, 2), xend = c(1, 2), y = bracket_y, yend = bracket_y / 1.12, linewidth = 0.9) +
+      annotate("text", x = 1.5, y = bracket_y * 1.12, label = "*", size = 7, fontface = "bold") +
+      annotate("text", x = 1.5, y = bracket_y / 1.3, label = bracket_label[2], size = 3.5, fontface = "bold")
+  }
+  return(p)
+}
+
+## Arrow from a ratio of 1 to the median ratio, with a star (shift of the median ratio from 1)
+add_ratio_arrow = function(p, x, median_ratio, color) {
+  star_y = ifelse(median_ratio < 1, median_ratio / 1.35, median_ratio * 1.25)
+  p +
+    annotate("segment", x = x, xend = x, y = 1, yend = median_ratio, color = color, linewidth = 1.2,
+             arrow = arrow(length = unit(0.12, "cm"), type = "closed")) +
+    annotate("text", x = x, y = star_y, label = "*", size = 7, fontface = "bold")
+}
+
+star_label = function(q, fold_change = NULL) {
+  if (q >= 0.05) return(NULL)
+  c("*", ifelse(is.null(fold_change), "", paste0(round(fold_change), "-fold")))
+}
+
+## Log10 y-axis: effect sizes (A, B, D, E), ratios (C), ratios (F)
+y_lim_es = c(0.003, 2.7)
+y_breaks_es = c(seq(0.003, 0.009, 0.001), seq(0.01, 0.09, 0.01), seq(0.1, 0.9, 0.1), 1, 2)
+y_labs_es = c(rep("", 7), "0.01", rep("", 8), "0.1", rep("", 8), "1", "")
+
+y_lim_ratio = c(0.05, 15)
+y_breaks_ratio = c(seq(0.05, 0.09, 0.01), seq(0.1, 0.9, 0.1), seq(1, 9, 1), 10)
+y_labs_ratio = c("0.05", rep("", 4), "0.1", rep("", 8), "1", rep("", 8), "10")
+
+y_lim_ratio_F = c(0.03, 50)
+y_breaks_ratio_F = c(0.03, 0.05, seq(0.1, 0.9, 0.1), seq(1, 9, 1), 10, 20, 30, 40, 50)
+y_labs_ratio_F = c("", "0.05", "0.1", rep("", 8), "1", rep("", 8), "10", rep("", 4))
+
+x_labs_fig2 = c("CNV" = "Rare genetic\nvariants (CNVs)", "NPD" = "NPD\ndiagnosis")
+x_labs_fig3 = c("NPD-med" = "NPD\nmedicated", "NPD-umed" = "NPD\nun-medicated")
+col_fig2 = col_values_CNV_NPD[c("CNV", "NPD")]
+col_fig3 = col_values_CNV_NPD[c("NPD-med", "NPD-umed")]
+```
+
+## Plot Fig. 2A: meanCT
+
+```{r fig2A}
+p_fig2A = plot_panel(in_df_fig2, "abs_es_MeanCT", "Effect size", col_fig2, y_lim_es, y_breaks_es, y_labs_es,
+                     x_labs_fig2, "A.", "Thickness (CT)", bracket_y = 4.5,
+                     bracket_label = star_label(df_fold_change_fig2A_2B$pval_adj[1], df_fold_change_fig2A_2B$fold_change[1]))
+print(p_fig2A)
+```
+
+## Plot Fig. 2B: totalSA
+
+```{r fig2B}
+p_fig2B = plot_panel(in_df_fig2, "abs_es_TotalSA", "Effect size", col_fig2, y_lim_es, y_breaks_es, y_labs_es,
+                     x_labs_fig2, "B.", "Area (SA)", bracket_y = 4.5,
+                     bracket_label = star_label(df_fold_change_fig2A_2B$pval_adj[2], df_fold_change_fig2A_2B$fold_change[2]))
+print(p_fig2B)
+```
+
+## Plot Fig. 2C: Effect size ratio
+
+```{r fig2C}
+p_fig2C = plot_panel(in_df_fig2, "ratio_CT_SA", "Cohen's d CT / Cohen's d SA ratio", col_fig2,
+                     y_lim_ratio, y_breaks_ratio, y_labs_ratio, x_labs_fig2, "C.", "Ratio of effect sizes",
+                     bracket_y = 25, bracket_label = star_label(pvalue_ratio_CNV_vs_NPD)) +
+  geom_hline(yintercept = 1, linetype = "dashed", color = "gray30", linewidth = 0.6)
+for (i in which(df_median_es_ratio_fig2C$pval_adj < 0.05)) {
+  p_fig2C = add_ratio_arrow(p_fig2C, i + 0.45, df_median_es_ratio_fig2C$median_ratio[i], col_fig2[i])
+}
+print(p_fig2C)
+```
+
+## Plot Fig. 2D: meanCT, medication
+
+```{r fig2D}
+p_fig2D = plot_panel(in_df_fig3, "abs_es_MeanCT", "Effect size", col_fig3, y_lim_es, y_breaks_es, y_labs_es,
+                     x_labs_fig3, "D.", "Thickness (CT)", bracket_y = 4.5,
+                     bracket_label = star_label(df_fold_change_fig2D_2E$pval_adj[1], df_fold_change_fig2D_2E$fold_change[1]))
+print(p_fig2D)
+```
+
+## Plot Fig. 2E: totalSA, medication
+
+```{r fig2E}
+p_fig2E = plot_panel(in_df_fig3, "abs_es_TotalSA", "Effect size", col_fig3, y_lim_es, y_breaks_es, y_labs_es,
+                     x_labs_fig3, "E.", "Area (SA)", bracket_y = 4.5,
+                     bracket_label = star_label(df_fold_change_fig2D_2E$pval_adj[2], df_fold_change_fig2D_2E$fold_change[2]))
+print(p_fig2E)
+```
+
+## Plot Fig. 2F: Effect size ratio, medication
+
+```{r fig2F}
+p_fig2F = plot_panel(in_df_fig3, "ratio_CT_SA", "Cohen's d CT / Cohen's d SA ratio", col_fig3,
+                     y_lim_ratio_F, y_breaks_ratio_F, y_labs_ratio_F, x_labs_fig3, "F.", "Ratio of effect sizes",
+                     bracket_y = 90, bracket_label = star_label(pvalue_ratio_NPDmed_vs_NPDumed)) +
+  geom_hline(yintercept = 1, linetype = "dashed", color = "gray30", linewidth = 0.6)
+for (i in which(df_median_es_ratio_fig2F$pval_adj < 0.05)) {
+  p_fig2F = add_ratio_arrow(p_fig2F, i + 0.45, df_median_es_ratio_fig2F$median_ratio[i], col_fig3[i])
+}
+print(p_fig2F)
+```
+
+## Assemble Fig. 2
+
+```{r fig2_composite, fig.width = 9, fig.height = 12}
+## Legend tables: ID = condition name
+med_name_map = c("BD-m1" = "BD-lithium", "BD-m2" = "BD-antiepileptics",
+                 "SCZ-m1" = "SCZ-1st gen. antipsychotic", "SCZ-m2" = "SCZ-2nd gen. antipsychotic",
+                 "SCZ-m12" = "SCZ-1st & 2nd gen. antipsychotic")
+
+legend_table = function(df, title, title_color, ncol) {
+  df = df[order(df$ID), ]
+  labels = ifelse(df$Column %in% names(med_name_map), med_name_map[df$Column], df$Column)
+  entries = paste0(df$ID, " = ", labels)
+  nrow_table = ceiling(length(entries) / ncol)
+  entries = c(entries, rep("", nrow_table * ncol - length(entries)))
+  table_df = as.data.frame(matrix(entries, nrow = nrow_table, ncol = ncol))
+  colnames(table_df) = rep("", ncol)
+  tt = ttheme_minimal(base_size = 10, padding = unit(c(1.5, 1.5), "mm"),
+                      core = list(fg_params = list(hjust = 0, x = 0.02, fontsize = 10),
+                                  bg_params = list(fill = NA, col = NA)),
+                      colhead = list(fg_params = list(fontsize = 10), bg_params = list(fill = NA, col = NA)))
+  title_grob = textGrob(title, gp = gpar(fontface = "bold", fontsize = 11, col = title_color))
+  table_grob = arrangeGrob(title_grob, tableGrob(table_df, rows = NULL, theme = tt), ncol = 1,
+                           heights = unit(c(0.2, 1), "null"))
+  box_grob = roundrectGrob(width = unit(0.92, "npc"), height = unit(0.96, "npc"), r = unit(0.08, "snpc"),
+                           gp = gpar(fill = NA, col = "#1f2d4a", lwd = 2))
+  grobTree(box_grob, table_grob)
+}
+
+legend_fig2 = arrangeGrob(legend_table(in_df_fig2[in_df_fig2$Type == "CNV", ], "Rare genetic variants (CNVs)", col_fig2[1], 3),
+                          legend_table(in_df_fig2[in_df_fig2$Type == "NPD", ], "NPD diagnosis", col_fig2[2], 3),
+                          ncol = 2, widths = unit(c(0.7, 0.3), "npc"))
+legend_fig3 = arrangeGrob(legend_table(in_df_fig3[in_df_fig3$Type == "NPD-med", ], "NPD medicated", col_fig3[1], 3),
+                          legend_table(in_df_fig3[in_df_fig3$Type == "NPD-umed", ], "NPD un-medicated", col_fig3[2], 2),
+                          ncol = 2, widths = unit(c(0.7, 0.3), "npc"))
+
+title_fig2 = ggdraw() + draw_label("Comparison between NPDs and associated rare genetic variants (CNVs)", fontface = "bold", size = 11)
+title_fig3 = ggdraw() + draw_label("Influence of non-genetic factors (Medication status)", fontface = "bold", size = 11)
+
+p_fig2 = plot_grid(title_fig2, plot_grid(p_fig2A, p_fig2B, p_fig2C, nrow = 1), ggdraw() + draw_grob(legend_fig2), NULL,
+                   title_fig3, plot_grid(p_fig2D, p_fig2E, p_fig2F, nrow = 1), ggdraw() + draw_grob(legend_fig3),
+                   ncol = 1, rel_heights = c(0.04, 1, 0.34, 0.03, 0.04, 1, 0.24))
+print(p_fig2)
+
+save_panel(p_fig2A, "Fig2A", 3, 4.5)
+save_panel(p_fig2B, "Fig2B", 3, 4.5)
+save_panel(p_fig2C, "Fig2C", 3, 4.5)
+save_panel(p_fig2D, "Fig2D", 3, 4.5)
+save_panel(p_fig2E, "Fig2E", 3, 4.5)
+save_panel(p_fig2F, "Fig2F", 3, 4.5)
+save_panel(p_fig2, "Fig2", 9, 12)
+```
+
+## Save source data
+
+```{r source_data}
+source_data_panel = function(df, y_var, df_stats, stats_row) {
+  out = data.frame(ID = df$ID, condition = df$Column, group = df$Type, value = df[, y_var])
+  names(out)[4] = y_var
+  out$n_group = as.vector(table(df$Type)[df$Type])
+  cbind(out, df_stats[rep(stats_row, nrow(out)), -1], row.names = NULL)
+}
+
+df_fig2C_stats = df_median_es_ratio_fig2C[match(in_df_fig2$Type, df_median_es_ratio_fig2C$type), c("median_ratio", "pval", "pval_adj")]
+names(df_fig2C_stats) = c("median_ratio_group", "pval_ratio_vs_1", "pval_adj_ratio_vs_1")
+df_fig2F_stats = df_median_es_ratio_fig2F[match(in_df_fig3$Type, df_median_es_ratio_fig2F$type), c("median_ratio", "pval", "pval_adj")]
+names(df_fig2F_stats) = c("median_ratio_group", "pval_ratio_vs_1", "pval_adj_ratio_vs_1")
+
+save_source_data(source_data_panel(in_df_fig2, "abs_es_MeanCT", df_fold_change_fig2A_2B, 1), "Fig2A")
+save_source_data(source_data_panel(in_df_fig2, "abs_es_TotalSA", df_fold_change_fig2A_2B, 2), "Fig2B")
+save_source_data(cbind(data.frame(ID = in_df_fig2$ID, condition = in_df_fig2$Column, group = in_df_fig2$Type,
+                                  ratio_CT_SA = in_df_fig2$ratio_CT_SA), df_fig2C_stats,
+                       pval_CNV_vs_NPD = pvalue_ratio_CNV_vs_NPD, row.names = NULL), "Fig2C")
+save_source_data(source_data_panel(in_df_fig3, "abs_es_MeanCT", df_fold_change_fig2D_2E, 1), "Fig2D")
+save_source_data(source_data_panel(in_df_fig3, "abs_es_TotalSA", df_fold_change_fig2D_2E, 2), "Fig2E")
+save_source_data(cbind(data.frame(ID = in_df_fig3$ID, condition = in_df_fig3$Column, group = in_df_fig3$Type,
+                                  ratio_CT_SA = in_df_fig3$ratio_CT_SA), df_fig2F_stats,
+                       pval_NPDmed_vs_NPDumed = pvalue_ratio_NPDmed_vs_NPDumed, row.names = NULL), "Fig2F")
+```

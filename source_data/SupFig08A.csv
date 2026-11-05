@@ -1,0 +1,9 @@
+"disorder","group_name","metric","es","sig_label"
+"BD","1st degree relatives","Mean CT",-0.01,NA
+"BD","Disorder","Mean CT",-0.35,"#"
+"SCZ","1st degree relatives","Mean CT",-0.13,NA
+"SCZ","Disorder","Mean CT",-0.62,"#"
+"BD","1st degree relatives","Total SA",0.15,NA
+"BD","Disorder","Total SA",0.08,NA
+"SCZ","1st degree relatives","Total SA",-0.01,NA
+"SCZ","Disorder","Total SA",-0.21,NA

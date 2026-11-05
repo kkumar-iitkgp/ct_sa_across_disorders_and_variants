@@ -1,0 +1,6 @@
+"reference_map","reference_label","map","r","p_spin"
+"fcgradient01","Functional gradient","CT_CNVs",-0.361951078509935,0.05025
+"fcgradient01","Functional gradient","SA_CNVs",-0.474677766977156,0.008
+"fcgradient01","Functional gradient","CT_NPDs",0.169660645764381,0.16855
+"fcgradient01","Functional gradient","SA_NPDs",0.258667216907076,0.06685
+"fcgradient01","Functional gradient","SA_SNPs",-0.378316853854906,0.02665

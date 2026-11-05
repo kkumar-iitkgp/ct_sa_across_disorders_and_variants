@@ -1,0 +1,6 @@
+"Column","Type","abs_es_MeanCT","abs_es_TotalSA","n_pairs","statistic","pval","pval_adj"
+"ASD","NPD-umed",0.08,0.07,5,8,1,1
+"ADHD","NPD-umed",0.003,0.05,5,8,1,1
+"MDD","NPD-umed",0.0225,0.0115,5,8,1,1
+"OCD","NPD-umed",0.01,0.02,5,8,1,1
+"SCZ","NPD-umed",0.275,0.246,5,8,1,1

@@ -69,5 +69,14 @@ R (4.2) with ggplot2, ggprism, ggrepel, ggseg, cowplot, patchwork, rmarkdown, kn
 An interactive website to explore the main results of the paper:
 https://kkumar-iitkgp.github.io/cortical-signatures-CNVs-NPDs/
 
+## Citation
+If you use this code or data, please cite:
+
+Kumar K. et al. Copy number variants reveal divergent genetic and diagnostic cortical signatures across psychiatric disorders. Communications Medicine (under review).
+
 ## Pre-print
 Cortical differences across psychiatric disorders and associated common and rare genetic variants. doi: https://doi.org/10.1101/2025.04.16.25325971
+
+## Licence
+MIT License (see `LICENSE`).
+

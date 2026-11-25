@@ -11,7 +11,7 @@ Kumar K. et al. *Copy number variants reveal divergent genetic and diagnostic co
 | Fig. 3: Regional cortical alterations across rare genetic variants | `code/Fig3.Rmd` ([output](code/Fig3.md)) |
 | Fig. 4: Regional cortical alterations across neurodevelopmental and psychiatric disorders | `code/Fig4.Rmd` ([output](code/Fig4.md)) |
 | Fig. 5: Correlation between the cortical gradient and latent dimensions of regional cortical differences | `code/Fig5.Rmd` ([output](code/Fig5.md)) |
-| Supplementary Figures 2 to 17 | `code/SupFig02_*.R` to `code/SupFig17_*.R` |
+| Supplementary Figures 2 to 18 | `code/SupFig02_*.R` to `code/SupFig18_*.R` |
 | Supplementary Table 7: enrichment of NPD-associated SNPs in cortical GWAS signals | `code/SupTable07_enrichment_FDR.R` |
 
 Figure 1 and Supplementary Figure 1 are overview illustrations.

@@ -1,0 +1,101 @@
+"reference_map","reference_label","map","r","p_spin"
+"scalingpnc","Allometric scaling PNC","SA_SNPs",-0.167570371962549,0.2435
+"scalingpnc","Allometric scaling PNC","CT_CNVs",-0.0257133205530699,0.4723
+"scalingpnc","Allometric scaling PNC","SA_CNVs",-0.233184207330424,0.18505
+"scalingpnc","Allometric scaling PNC","CT_NPDs",0.479099788483619,0.0097
+"scalingpnc","Allometric scaling PNC","SA_NPDs",-0.132531946875505,0.2335
+"scalingnih","Allometric scaling NIH","SA_SNPs",-0.135674978143452,0.2433
+"scalingnih","Allometric scaling NIH","CT_CNVs",-0.138594146502822,0.2464
+"scalingnih","Allometric scaling NIH","SA_CNVs",-0.310772282771607,0.0609
+"scalingnih","Allometric scaling NIH","CT_NPDs",0.492594966480116,0.0029
+"scalingnih","Allometric scaling NIH","SA_NPDs",0.0331914099754164,0.40605
+"intersubjvar","Intersubject functional variability","SA_SNPs",-0.385173681876463,0.044
+"intersubjvar","Intersubject functional variability","CT_CNVs",-0.121988991279508,0.2923
+"intersubjvar","Intersubject functional variability","SA_CNVs",-0.474245633208689,0.02625
+"intersubjvar","Intersubject functional variability","CT_NPDs",0.577348055506472,0.00115
+"intersubjvar","Intersubject functional variability","SA_NPDs",0.0594943018824784,0.3331
+"fcgradient01","Functional gradient","SA_SNPs",-0.378316853854906,0.02665
+"fcgradient01","Functional gradient","CT_CNVs",-0.361951078509935,0.05025
+"fcgradient01","Functional gradient","SA_CNVs",-0.474677766977156,0.008
+"fcgradient01","Functional gradient","CT_NPDs",0.169660645764381,0.16855
+"fcgradient01","Functional gradient","SA_NPDs",0.258667216907076,0.06685
+"evoexp","Evolutionary expansion","SA_SNPs",0.158746121285415,0.2666
+"evoexp","Evolutionary expansion","CT_CNVs",0.492480395089193,0.00825
+"evoexp","Evolutionary expansion","SA_CNVs",0.257379831332498,0.1188
+"evoexp","Evolutionary expansion","CT_NPDs",-0.439552100559438,0.0164
+"evoexp","Evolutionary expansion","SA_NPDs",-0.0882722959910567,0.2536
+"devexp","Developmental expansion","SA_SNPs",0.203179341649361,0.1346
+"devexp","Developmental expansion","CT_CNVs",0.536217252755215,0.00275
+"devexp","Developmental expansion","SA_CNVs",0.308808057856047,0.0611
+"devexp","Developmental expansion","CT_NPDs",-0.113544244627595,0.2657
+"devexp","Developmental expansion","SA_NPDs",-0.204756864797981,0.1118
+"thickness","Cortical thickness","SA_SNPs",-0.445280022797357,0.01
+"thickness","Cortical thickness","CT_CNVs",-0.621675480172635,0.00315
+"thickness","Cortical thickness","SA_CNVs",-0.529721149137577,0.0077
+"thickness","Cortical thickness","CT_NPDs",0.368327788144805,0.0444
+"thickness","Cortical thickness","SA_NPDs",0.140547312054137,0.18125
+"myelinmap","T1w/T2w","SA_SNPs",0.331252828511996,0.0488
+"myelinmap","T1w/T2w","CT_CNVs",0.529231548824476,0.0066
+"myelinmap","T1w/T2w","SA_CNVs",0.404829494607463,0.03965
+"myelinmap","T1w/T2w","CT_NPDs",-0.0999001172562113,0.2544
+"myelinmap","T1w/T2w","SA_NPDs",-0.382601314662919,0.0129
+"abagen (x -1; main gradient)","PC1 gene expression","SA_SNPs",-0.494595466668001,0.011
+"abagen (x -1; main gradient)","PC1 gene expression","CT_CNVs",-0.691113691496074,0.00055
+"abagen (x -1; main gradient)","PC1 gene expression","SA_CNVs",-0.592876647737364,0.0086
+"abagen (x -1; main gradient)","PC1 gene expression","CT_NPDs",0.202854636151773,0.1664
+"abagen (x -1; main gradient)","PC1 gene expression","SA_NPDs",0.318181470505647,0.0231
+"neurosynth","PC1 NeuroSynth","SA_SNPs",0.152416951217453,0.23395
+"neurosynth","PC1 NeuroSynth","CT_CNVs",0.254251594236233,0.14595
+"neurosynth","PC1 NeuroSynth","SA_CNVs",0.193716457120462,0.2242
+"neurosynth","PC1 NeuroSynth","CT_NPDs",0.0937456961833008,0.43635
+"neurosynth","PC1 NeuroSynth","SA_NPDs",-0.325348224578436,0.0279
+"cmruglu","Glucose metabolism","SA_SNPs",0.112037264239916,0.28495
+"cmruglu","Glucose metabolism","CT_CNVs",0.656760237304814,0.00035
+"cmruglu","Glucose metabolism","SA_CNVs",0.141603883638598,0.26865
+"cmruglu","Glucose metabolism","CT_NPDs",0.0585796986218785,0.43245
+"cmruglu","Glucose metabolism","SA_NPDs",-0.186547272078346,0.12945
+"cmr02","Oxygen metabolism","SA_SNPs",0.300819304728069,0.05205
+"cmr02","Oxygen metabolism","CT_CNVs",0.718177224394034,2e-04
+"cmr02","Oxygen metabolism","SA_CNVs",0.330522353025877,0.0637
+"cmr02","Oxygen metabolism","CT_NPDs",-0.0718728685070089,0.323
+"cmr02","Oxygen metabolism","SA_NPDs",-0.271572728960249,0.05565
+"cbv","Cerebral blood volume","SA_SNPs",0.505168595489455,0.01625
+"cbv","Cerebral blood volume","CT_CNVs",0.360213346244559,0.06875
+"cbv","Cerebral blood volume","SA_CNVs",0.582124717013633,0.0089
+"cbv","Cerebral blood volume","CT_NPDs",-0.305656917714042,0.07445
+"cbv","Cerebral blood volume","SA_NPDs",-0.221278476635911,0.0827
+"cbf","Cerebral blood flow","SA_SNPs",0.141528747280389,0.2184
+"cbf","Cerebral blood flow","CT_CNVs",0.714762969625605,0.00015
+"cbf","Cerebral blood flow","SA_CNVs",0.153295986073902,0.2256
+"cbf","Cerebral blood flow","CT_NPDs",-0.133460093673975,0.22855
+"cbf","Cerebral blood flow","SA_NPDs",-0.152488621237203,0.1827
+"meggamma2","High-gamma (60-90 Hz)","SA_SNPs",-0.253172822096225,0.1535
+"meggamma2","High-gamma (60-90 Hz)","CT_CNVs",-0.361294004581546,0.06665
+"meggamma2","High-gamma (60-90 Hz)","SA_CNVs",-0.432965786095351,0.0349
+"meggamma2","High-gamma (60-90 Hz)","CT_NPDs",0.105478880904917,0.3314
+"meggamma2","High-gamma (60-90 Hz)","SA_NPDs",0.0615361126412104,0.35175
+"meggamma1","Low-gamma (30-59 Hz)","SA_SNPs",-0.347015833515941,0.04645
+"meggamma1","Low-gamma (30-59 Hz)","CT_CNVs",-0.0998237115996312,0.3553
+"meggamma1","Low-gamma (30-59 Hz)","SA_CNVs",-0.438414667301745,0.0244
+"meggamma1","Low-gamma (30-59 Hz)","CT_NPDs",0.082995725903595,0.35885
+"meggamma1","Low-gamma (30-59 Hz)","SA_NPDs",0.127890449015607,0.2367
+"megbeta","Beta (15-29 Hz)","SA_SNPs",-0.171670073290078,0.30125
+"megbeta","Beta (15-29 Hz)","CT_CNVs",0.37100937725478,0.0845
+"megbeta","Beta (15-29 Hz)","SA_CNVs",-0.0378594088343608,0.48355
+"megbeta","Beta (15-29 Hz)","CT_NPDs",0.216389135158904,0.2299
+"megbeta","Beta (15-29 Hz)","SA_NPDs",0.0960059169005499,0.2851
+"megalpha","Alpha (8-12 Hz)","SA_SNPs",0.455276556565142,0.02055
+"megalpha","Alpha (8-12 Hz)","CT_CNVs",0.410239767367265,0.07455
+"megalpha","Alpha (8-12 Hz)","SA_CNVs",0.580874290440092,0.00985
+"megalpha","Alpha (8-12 Hz)","CT_NPDs",-0.019572066578552,0.4378
+"megalpha","Alpha (8-12 Hz)","SA_NPDs",-0.198440546918138,0.12355
+"megtheta","Theta (5-7 Hz)","SA_SNPs",-0.425449625822165,0.01635
+"megtheta","Theta (5-7 Hz)","CT_CNVs",0.0250996974174227,0.4685
+"megtheta","Theta (5-7 Hz)","SA_CNVs",-0.535636847133949,0.0044
+"megtheta","Theta (5-7 Hz)","CT_NPDs",0.277113130982259,0.12535
+"megtheta","Theta (5-7 Hz)","SA_NPDs",0.153005064318792,0.183
+"megdelta","Delta (2-4 Hz)","SA_SNPs",-0.3291390113319,0.0777
+"megdelta","Delta (2-4 Hz)","CT_CNVs",-0.241352763713327,0.17715
+"megdelta","Delta (2-4 Hz)","SA_CNVs",-0.5911659805754,0.0024
+"megdelta","Delta (2-4 Hz)","CT_NPDs",0.179691489152577,0.2353
+"megdelta","Delta (2-4 Hz)","SA_NPDs",0.138631450429542,0.2163

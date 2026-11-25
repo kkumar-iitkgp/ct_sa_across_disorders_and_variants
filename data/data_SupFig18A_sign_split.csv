@@ -1,0 +1,5 @@
+"Disorder","Set","Metric","N","N_negative","Pct_negative","Binom_p_two_sided"
+"BD","BD","SA",234,134,57.3,0.03076
+"BD","BD","CT",225,122,54.2,0.2301
+"SCZ","SCZ","SA",259,142,54.8,0.1357
+"SCZ","SCZ","CT",249,112,45,0.1281
